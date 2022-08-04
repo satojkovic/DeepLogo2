@@ -13,6 +13,14 @@ def info():
     return tmp
 
 
+def licences():
+    tmp = OrderedDict()
+    tmp['id'] = 1
+    tmp['url'] = 'Unknown'
+    tmp['name'] = 'Unknown'
+    return tmp
+
+
 if __name__ == '__main__':
     query_list = ['info', 'licenses', 'images',
                   'annotations', 'categories', 'segment_info']
@@ -21,6 +29,8 @@ if __name__ == '__main__':
         tmp = ''
         if query == 'info':
             tmp = info()
+        if query == 'licenses':
+            tmp = licences()
 
         js[query] = tmp
 
