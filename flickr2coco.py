@@ -1,5 +1,8 @@
-from collections import OrderedDict
+import argparse
 import json
+from collections import OrderedDict
+
+from config import get_cfg_defaults
 
 
 def info():
@@ -22,6 +25,15 @@ def licences():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--cfg_file', dest='cfg_file',
+                        default=None, type=str, help='Path to config file.')
+    args = parser.parse_args()
+
+    cfg = get_cfg_defaults()
+    if args.cfg_file is not None:
+        cfg.merge_from_file(args.cfg_file)
+
     query_list = ['info', 'licenses', 'images',
                   'annotations', 'categories', 'segment_info']
     js = OrderedDict()
