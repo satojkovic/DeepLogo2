@@ -1,6 +1,6 @@
 import argparse
 import json
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from config import get_cfg_defaults
 
@@ -24,6 +24,16 @@ def licences():
     return tmp
 
 
+def get_annots(cfg):
+    annots = defaultdict(list)
+    with open(cfg.CROPPED_ANNOT_FILE, 'r') as f:
+        for line in f:
+            elems = line.rstrip().split(',')
+            jpg_file, groundtruth = elems[0], list(map(int, elems[1:]))
+            annots[jpg_file] = groundtruth
+    return annots
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_file', dest='cfg_file',
@@ -33,6 +43,8 @@ if __name__ == '__main__':
     cfg = get_cfg_defaults()
     if args.cfg_file is not None:
         cfg.merge_from_file(args.cfg_file)
+
+    annots = get_annots(cfg)
 
     query_list = ['info', 'licenses', 'images',
                   'annotations', 'categories', 'segment_info']
