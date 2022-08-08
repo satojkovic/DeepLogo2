@@ -34,6 +34,13 @@ def get_annots(cfg):
     return annots
 
 
+def get_image_idxes(annots):
+    idxes = defaultdict(int)
+    for i, k in enumerate(annots.keys()):
+        idxes[k] = i
+    return idxes
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_file', dest='cfg_file',
@@ -45,6 +52,7 @@ if __name__ == '__main__':
         cfg.merge_from_file(args.cfg_file)
 
     annots = get_annots(cfg)
+    image_idxes = get_image_idxes(annots)
 
     query_list = ['info', 'licenses', 'images',
                   'annotations', 'categories', 'segment_info']
