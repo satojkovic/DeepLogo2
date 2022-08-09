@@ -1,6 +1,8 @@
 import argparse
 import json
 from collections import OrderedDict, defaultdict
+import cv2
+import os
 
 from config import get_cfg_defaults
 
@@ -41,6 +43,15 @@ def get_image_idxes(annots):
     return idxes
 
 
+def get_image_sizes(annots, cfg):
+    image_sizes = defaultdict(set)
+    for k in annots.keys():
+        img = cv2.imread(os.path.join(cfg.IMAGE_DIR, k))
+        h, w, _ = img.shape
+        image_sizes[k] = (h, w)
+    return image_sizes
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_file', dest='cfg_file',
@@ -53,6 +64,7 @@ if __name__ == '__main__':
 
     annots = get_annots(cfg)
     image_idxes = get_image_idxes(annots)
+    image_sizes = get_image_sizes(annots, cfg)
 
     query_list = ['info', 'licenses', 'images',
                   'annotations', 'categories', 'segment_info']
