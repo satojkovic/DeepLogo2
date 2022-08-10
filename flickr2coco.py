@@ -26,6 +26,22 @@ def licences():
     return tmp
 
 
+def images(image_idxes, image_sizes):
+    tmps = []
+    for k in image_idxes.keys():
+        tmp = OrderedDict()
+        tmp['licenses'] = 1
+        tmp['id'] = image_idxes[k]
+        tmp['file_name'] = k
+        tmp['height'] = image_sizes[k][0]
+        tmp['width'] = image_sizes[k][1]
+        tmp['date_captured'] = ''
+        tmp['coco_url'] = ''
+        tmp['flickr_url'] = ''
+        tmps.append(tmp)
+    return tmps
+
+
 def get_annots(cfg):
     annots = defaultdict(list)
     with open(cfg.CROPPED_ANNOT_FILE, 'r') as f:
@@ -75,6 +91,8 @@ if __name__ == '__main__':
             tmp = info()
         if query == 'licenses':
             tmp = licences()
+        if query == 'images':
+            tmp = images(image_idxes, image_sizes)
 
         js[query] = tmp
 
