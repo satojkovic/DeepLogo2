@@ -1,4 +1,5 @@
 import argparse
+from ast import Or
 import json
 from collections import OrderedDict, defaultdict
 import cv2
@@ -38,6 +39,37 @@ def images(image_idxes, image_sizes):
         tmp['date_captured'] = ''
         tmp['coco_url'] = ''
         tmp['flickr_url'] = ''
+        tmps.append(tmp)
+    return tmps
+
+
+def annotations(annots, image_idxes, image_sizes):
+    tmps = []
+    count = 0
+    for k in annots.keys():
+        for j in range(0, len(annots[k]), 5):
+            tmp = OrderedDict()
+            tmp['id'] = count
+            tmp['image_id'] = image_idxes[k]
+            tmp['category_id'] = annots[k][j + 4]
+            tmp['segmentation'] = []
+            height = image_sizes[k][0]
+            width = image_sizes[k][1]
+            tmp['area'] = width * height
+            tmp['bbox'] = [annots[k][j], annots[k][j+1], width, height]
+            tmp['iscrowd'] = 0
+            tmps.append(tmp)
+            count += 1
+    return tmps
+
+
+def categories(cfg):
+    tmps = []
+    for i, cn in enumerate(cfg.CLASS_NAMES):
+        tmp = OrderedDict()
+        tmp['id'] = i
+        tmp['supercategory'] = 'Logos'
+        tmp['name'] = cn
         tmps.append(tmp)
     return tmps
 
@@ -83,7 +115,7 @@ if __name__ == '__main__':
     image_sizes = get_image_sizes(annots, cfg)
 
     query_list = ['info', 'licenses', 'images',
-                  'annotations', 'categories', 'segment_info']
+                  'annotations', 'categories']
     js = OrderedDict()
     for i, query in enumerate(query_list):
         tmp = ''
@@ -93,6 +125,10 @@ if __name__ == '__main__':
             tmp = licences()
         if query == 'images':
             tmp = images(image_idxes, image_sizes)
+        if query == 'annotations':
+            tmp = annotations(annots, image_idxes, image_sizes)
+        if query == 'categories':
+            tmp = categories(cfg)
 
         js[query] = tmp
 
