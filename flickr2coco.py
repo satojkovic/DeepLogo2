@@ -107,6 +107,8 @@ if __name__ == '__main__':
                         default=None, type=str, help='Path to config file.')
     parser.add_argument('--mode', dest='mode',
                         default='train', type=str, help='train or test.')
+    parser.add_argument('--output_dir', dest='output_dir',
+                        default='.', type=str, help='Path to output directory.')
     args = parser.parse_args()
 
     cfg = get_cfg_defaults()
@@ -136,5 +138,7 @@ if __name__ == '__main__':
         js[query] = tmp
 
     output_fn = 'flickr_logos_27_train.json' if args.mode == 'train' else 'flickr_logos_27_test.json'
-    with open(output_fn, 'w') as f:
+    if args.output_dir != '.' and not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
+    with open(os.path.join(args.output_dir, output_fn), 'w') as f:
         json.dump(js, f, indent=2)
