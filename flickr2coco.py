@@ -74,9 +74,10 @@ def categories(cfg):
     return tmps
 
 
-def get_annots(cfg):
+def get_annots(cfg, mode):
     annots = defaultdict(list)
-    with open(cfg.CROPPED_ANNOT_FILE, 'r') as f:
+    fn = cfg.CROPPED_ANNOT_FILE if mode == 'train' else cfg.CROPPED_ANNOT_FILE_TEST
+    with open(fn, 'r') as f:
         for line in f:
             elems = line.rstrip().split(',')
             jpg_file, groundtruth = elems[0], list(map(int, elems[1:]))
@@ -104,13 +105,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_file', dest='cfg_file',
                         default=None, type=str, help='Path to config file.')
+    parser.add_argument('--mode', dest='mode',
+                        default='train', type=str, help='train or test.')
     args = parser.parse_args()
 
     cfg = get_cfg_defaults()
     if args.cfg_file is not None:
         cfg.merge_from_file(args.cfg_file)
 
-    annots = get_annots(cfg)
+    annots = get_annots(cfg, args.mode)
     image_idxes = get_image_idxes(annots)
     image_sizes = get_image_sizes(annots, cfg)
 
@@ -132,5 +135,6 @@ if __name__ == '__main__':
 
         js[query] = tmp
 
-    with open('flickr_logos_27.json', 'w') as f:
+    output_fn = 'flickr_logos_27_train.json' if args.mode == 'train' else 'flickr_logos_27_test.json'
+    with open(output_fn, 'w') as f:
         json.dump(js, f, indent=2)
