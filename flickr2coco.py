@@ -53,8 +53,8 @@ def annotations(annots, image_idxes):
             tmp['image_id'] = image_idxes[k]
             tmp['category_id'] = annots[k][j + 4]
             tmp['segmentation'] = []
-            width = abs(annots[k][j], annots[k][j+2])
-            height = abs(annots[k][j+1], annots[k][j+3])
+            width = abs(annots[k][j] - annots[k][j+2])
+            height = abs(annots[k][j+1] - annots[k][j+3])
             tmp['area'] = width * height
             tmp['bbox'] = [annots[k][j], annots[k][j+1], width, height]
             tmp['iscrowd'] = 0
