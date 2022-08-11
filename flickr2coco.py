@@ -43,7 +43,7 @@ def images(image_idxes, image_sizes):
     return tmps
 
 
-def annotations(annots, image_idxes, image_sizes):
+def annotations(annots, image_idxes):
     tmps = []
     count = 0
     for k in annots.keys():
@@ -53,8 +53,8 @@ def annotations(annots, image_idxes, image_sizes):
             tmp['image_id'] = image_idxes[k]
             tmp['category_id'] = annots[k][j + 4]
             tmp['segmentation'] = []
-            height = image_sizes[k][0]
-            width = image_sizes[k][1]
+            width = abs(annots[k][j], annots[k][j+2])
+            height = abs(annots[k][j+1], annots[k][j+3])
             tmp['area'] = width * height
             tmp['bbox'] = [annots[k][j], annots[k][j+1], width, height]
             tmp['iscrowd'] = 0
@@ -131,7 +131,7 @@ if __name__ == '__main__':
         if query == 'images':
             tmp = images(image_idxes, image_sizes)
         if query == 'annotations':
-            tmp = annotations(annots, image_idxes, image_sizes)
+            tmp = annotations(annots, image_idxes)
         if query == 'categories':
             tmp = categories(cfg)
 
