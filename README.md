@@ -9,6 +9,14 @@ A brand logo detection system using DETR.
 
 DeepLogo2 provides a training and inference environment for creating brand logo detection models using DETR.
 
+# Detection results
+
+|||
+|---|---|
+|![example1](detect_results/2818828296.jpg)|![example2](detect_results/2368653535.jpg)|
+|![example3](detect_results/2459989055.jpg)|![example4](detect_results/2650126854.jpg)|
+|![example5](detect_results/3154099645.jpg)|![example6](detect_results/4585454903.jpg)|
+
 # Dataset
 
 DeepLogo2 use the [flickr logos 27 dataset](http://image.ntua.gr/iva/datasets/flickr_logos/).
