@@ -1,5 +1,4 @@
 import argparse
-from ast import Or
 import json
 from collections import OrderedDict, defaultdict
 import cv2
